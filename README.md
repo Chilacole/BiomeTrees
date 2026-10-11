@@ -11,7 +11,7 @@ A biome-aware sapling mod for BTA! Have you ever wanted trees to adapt dynamical
 
 ## Requires
 
-* Halplibe
+* [Halplibe](https://modrinth.com/mod/halplibe)
 
 ## Instructions
 
