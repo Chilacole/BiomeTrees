@@ -1,33 +1,24 @@
 {
 	"schemaVersion": 1,
-	"id": "examplemod",
-	"version": "${version}",
-	"name": "Example Mod",
-	"description": "This mod aims to help new BTA modders.",
-	"authors": [
-		"Turnip Labs"
-	],
-	"contact": {
-		"homepage": "",
-		"sources": ""
-	},
+	"id": "biometrees",
+	"version": "1.0.0",
+	"name": "Biome Trees",
+	"description": "Biome-aware sapling growth for BTA.",
+	"authors": ["Chilacole"],
+	"contact": {},
+	"license": "MIT",
 	"icon": "icon.png",
-	"license": "CC0-1.0",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"turniplabs.examplemod.ExampleMod"
+			"net.chilacole.biometrees.BiomeTrees"
 		]
 	},
 	"mixins": [
-		"examplemod.mixins.json"
+		"biometrees.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=${fabricloader}",
 		"minecraft": "*",
-		"java": ">=${java}"
-	},
-	"suggests": {
-		"modmenu": ">=${modmenu}"
+		"halplibe": "*"
 	}
 }

@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "net.chilacole.biometrees.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockSaplingOakMixin",
+    "BlockSaplingBirchMixin",
+    "BlockSaplingThornMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
