@@ -1,13 +1,16 @@
 # Biome Trees
 
-A biome-aware sapling mod for BTA! Have you ever wanted trees to adapt dynamically to their environment upon generation without adding a ton of custom sapling items? Here is the mod for you.
+A biome-aware sapling mod for Better Than Adventure! (BTA). Ever wanted trees to adapt to their environment when planted, without adding dozens of custom sapling items? Biome Trees makes it happen!
 
 ## Features
 
-* Oak saplings planted in a Swamp biome naturally grow into mossy Swamp Trees!
-* Birch saplings planted in a Birch Forest biome naturally grow into native tall birch trees!
-* Standard sapling generation remains completely untouched in other biomes
-* Seamless integration with vanilla BTA natural generation!
+* **Swamp Trees:** Oak saplings planted in Swamp biomes grow into swamp trees with mossy logs.
+* **Tall Birch Trees:** Birch saplings planted in Birch Forest biomes grow into taller birch trees native to the biome.
+* **Rainforest Oaks:** Oak saplings planted in Rainforest biomes grow into lush rainforest trees, including mossy-log variants and an extremely rare chance to grow a massive oak tree.
+* **Caatinga Vegetation:** Thorn saplings planted in Caatinga biomes can grow into thorn trees or smaller thorn-leaf shrubs with oak logs.
+* **Biome-Specific Growth:** Tree variants are selected according to the biome where the sapling is planted.
+* **Original Behavior Preserved:** Sapling growth remains unchanged in biomes without custom rules.
+* **Native Generation:** Uses BTA's existing tree-generation features for seamless integration with the game's world generation.
 
 ## Requires
 
@@ -15,4 +18,4 @@ A biome-aware sapling mod for BTA! Have you ever wanted trees to adapt dynamical
 
 ## Credits
 
-Chilacole - Creator, Lead Developer
+Chilacole - Creator
