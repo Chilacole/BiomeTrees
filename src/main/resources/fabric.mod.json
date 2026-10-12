@@ -12,6 +12,9 @@
 	"entrypoints": {
 		"main": [
 			"net.chilacole.biometrees.BiomeTrees"
+		],
+		"modmenu": [
+			"net.chilacole.biometrees.BiomeTreesModMenu"
 		]
 	},
 	"mixins": [
@@ -22,3 +25,4 @@
 		"halplibe": "*"
 	}
 }
+

@@ -1,4 +1,3 @@
-
 package net.chilacole.biometrees.mixin;
 
 import java.util.Random;
@@ -20,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.chilacole.biometrees.BiomeTreesConfig;
+
 @Mixin(value = BlockLogicSaplingOak.class, remap = false)
 public abstract class BlockSaplingOakMixin {
 
@@ -34,6 +35,9 @@ public abstract class BlockSaplingOakMixin {
 		Random random,
 		CallbackInfo ci
 	) {
+		if (!BiomeTreesConfig.isBiomeAwareGrowthEnabled()) {
+			return;
+		}
 		Biome biome = world.getBlockBiome(tilePos);
 
 		// Swamp: use the biome's original tree generator.

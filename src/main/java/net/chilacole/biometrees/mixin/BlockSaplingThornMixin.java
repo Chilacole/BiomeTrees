@@ -1,4 +1,3 @@
-
 package net.chilacole.biometrees.mixin;
 
 import java.util.Random;
@@ -17,6 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import net.chilacole.biometrees.BiomeTreesConfig;
 
 @Mixin(value = BlockLogicSaplingThorn.class, remap = false)
 public abstract class BlockSaplingThornMixin {

@@ -48,6 +48,7 @@ dependencies {
 
 	// Only required for development/launch at runtime, won't be part of any builds
 	localRuntime(libs.modMenu) // Optional, can be removed
+	compileOnly(libs.modMenu)
 	runtimeClasspath(libs.clientJar)
 	val lwjglVer = libs.versions.lwjgl.get()
 	localRuntime(platform("org.lwjgl:lwjgl-bom:${lwjglVer}"))
