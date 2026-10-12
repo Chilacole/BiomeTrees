@@ -35,13 +35,14 @@ public abstract class BlockSaplingOakMixin {
 		Random random,
 		CallbackInfo ci
 	) {
+		// Master toggle check
 		if (!BiomeTreesConfig.isBiomeAwareGrowthEnabled()) {
 			return;
 		}
 		Biome biome = world.getBlockBiome(tilePos);
 
-		// Swamp: use the biome's original tree generator.
-		if (biome instanceof BiomeSwamp) {
+		// Swamp: use the biome's original tree generator if enabled.
+		if (biome instanceof BiomeSwamp && BiomeTreesConfig.isSwampOakGrowthEnabled()) {
 			WorldFeature tree = biome.getTreeFeature(random);
 
 			world.setBlockType(tilePos, Blocks.AIR);
@@ -63,8 +64,8 @@ public abstract class BlockSaplingOakMixin {
 			return;
 		}
 
-		// Rainforest: select between giant, fancy, and regular oak trees.
-		if (biome instanceof BiomeRainforest) {
+		// Rainforest: select between giant, fancy, and regular oak trees if enabled.
+		if (biome instanceof BiomeRainforest && BiomeTreesConfig.isRainforestOakGrowthEnabled()) {
 			WorldFeature tree;
 
 			// Extremely rare giant round oak: 1 in 1,000.

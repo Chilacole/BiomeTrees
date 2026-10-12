@@ -16,7 +16,11 @@ public class BiomeTreesConfig {
 	private static final Properties VALUES = new Properties();
 
 	static {
+		// Master toggle
 		DEFAULTS.setProperty("biomeAwareGrowth", "true");
+		// Biome sub-toggles
+		DEFAULTS.setProperty("swampOakGrowth", "true");
+		DEFAULTS.setProperty("rainforestOakGrowth", "true");
 
 		CONFIG = new ConfigHandler("biometrees", DEFAULTS);
 
@@ -28,17 +32,47 @@ public class BiomeTreesConfig {
 		}
 	}
 
+	// --- Getters ---
+
 	public static boolean isBiomeAwareGrowthEnabled() {
 		return Boolean.parseBoolean(
 			VALUES.getProperty("biomeAwareGrowth", "true")
 		);
 	}
 
+	public static boolean isSwampOakGrowthEnabled() {
+		return Boolean.parseBoolean(
+			VALUES.getProperty("swampOakGrowth", "true")
+		);
+	}
+
+	public static boolean isRainforestOakGrowthEnabled() {
+		return Boolean.parseBoolean(
+			VALUES.getProperty("rainforestOakGrowth", "true")
+		);
+	}
+
+	// --- Setters ---
+
 	public static void setBiomeAwareGrowth(boolean enabled) {
 		VALUES.setProperty("biomeAwareGrowth", Boolean.toString(enabled));
+		saveConfig();
+	}
 
-		try (OutputStream output =
-				 new FileOutputStream(CONFIG.getFilePath())) {
+	public static void setSwampOakGrowth(boolean enabled) {
+		VALUES.setProperty("swampOakGrowth", Boolean.toString(enabled));
+		saveConfig();
+	}
+
+	public static void setRainforestOakGrowth(boolean enabled) {
+		VALUES.setProperty("rainforestOakGrowth", Boolean.toString(enabled));
+		saveConfig();
+	}
+
+	// --- Save Helper ---
+
+	private static void saveConfig() {
+		try (OutputStream output = new FileOutputStream(CONFIG.getFilePath())) {
 			VALUES.store(output, "Biome Trees configuration");
 		} catch (IOException e) {
 			e.printStackTrace();
