@@ -33,19 +33,33 @@ public abstract class BlockSaplingThornMixin {
 		CallbackInfo ci
 	) {
 		Biome biome = world.getBlockBiome(tilePos);
+		WorldFeature tree;
 
-		// Caatinga: 10% shrub, 90% thorn tree.
-		if (biome instanceof BiomeCaatinga) {
-			WorldFeature tree;
-
+		// Caatinga Plains: 25% shrub, 75% short thorn tree.
+		if ("biome.overworld.caatinga.plains".equals(biome.translationKey)) {
 			if (random.nextInt(4) == 0) {
-				// Rare shrub: thorn leaves and oak logs.
 				tree = new WorldFeatureTreeShrub(
 					Blocks.LEAVES_THORN.id(),
 					Blocks.LOG_OAK.id()
 				);
 			} else {
-				// Standard thorn tree.
+				tree = new WorldFeatureTreeThorn(
+					1,
+					Blocks.LOG_THORN.id(),
+					0,
+					Blocks.LEAVES_THORN.id(),
+					0
+				);
+			}
+		}
+		// Caatinga: 25% shrub, 75% tall thorn tree.
+		else if (biome instanceof BiomeCaatinga) {
+			if (random.nextInt(4) == 0) {
+				tree = new WorldFeatureTreeShrub(
+					Blocks.LEAVES_THORN.id(),
+					Blocks.LOG_OAK.id()
+				);
+			} else {
 				tree = new WorldFeatureTreeThorn(
 					4,
 					Blocks.LOG_THORN.id(),
@@ -54,25 +68,27 @@ public abstract class BlockSaplingThornMixin {
 					0
 				);
 			}
-
-			world.setBlockType(tilePos, Blocks.AIR);
-
-			if (!tree.place(
-				world,
-				random,
-				tilePos.x(),
-				tilePos.y(),
-				tilePos.z()
-			)) {
-				world.setBlockType(
-					tilePos,
-					((BlockLogicSaplingThorn)(Object)this).block
-				);
-			}
-
-			ci.cancel();
+		} else {
+			// Other biomes use the original sapling implementation.
+			return;
 		}
 
-		// Other biomes: preserve the original sapling behavior.
+		world.setBlockType(tilePos, Blocks.AIR);
+
+		if (!tree.place(
+			world,
+			random,
+			tilePos.x(),
+			tilePos.y(),
+			tilePos.z()
+		)) {
+			world.setBlockType(
+				tilePos,
+				((BlockLogicSaplingThorn)(Object)this).block
+			);
+		}
+
+		ci.cancel();
 	}
 }
+
