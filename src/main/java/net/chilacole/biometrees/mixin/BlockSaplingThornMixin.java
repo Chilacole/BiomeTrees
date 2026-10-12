@@ -27,69 +27,57 @@ public abstract class BlockSaplingThornMixin {
 		at = @At("HEAD"),
 		cancellable = true
 	)
-	private void onGrowTree(
-		World world,
-		TilePosc tilePos,
-		Random random,
-		CallbackInfo ci
-	) {
-		Biome biome = world.getBlockBiome(tilePos);
-		WorldFeature tree;
-
-		// Caatinga Plains: 25% shrub, 75% short thorn tree.
-		if ("biome.overworld.caatinga.plains".equals(biome.translationKey)) {
-			if (random.nextInt(4) == 0) {
-				tree = new WorldFeatureTreeShrub(
-					Blocks.LEAVES_THORN.id(),
-					Blocks.LOG_OAK.id()
-				);
-			} else {
-				tree = new WorldFeatureTreeThorn(
-					1,
-					Blocks.LOG_THORN.id(),
-					0,
-					Blocks.LEAVES_THORN.id(),
-					0
-				);
-			}
-		}
-		// Caatinga: 25% shrub, 75% tall thorn tree.
-		else if (biome instanceof BiomeCaatinga) {
-			if (random.nextInt(4) == 0) {
-				tree = new WorldFeatureTreeShrub(
-					Blocks.LEAVES_THORN.id(),
-					Blocks.LOG_OAK.id()
-				);
-			} else {
-				tree = new WorldFeatureTreeThorn(
-					4,
-					Blocks.LOG_THORN.id(),
-					0,
-					Blocks.LEAVES_THORN.id(),
-					0
-				);
-			}
-		} else {
-			// Other biomes use the original sapling implementation.
+	private void onGrowTree(World world, TilePosc tilePos, Random random, CallbackInfo ci) {
+		if (!BiomeTreesConfig.isBiomeAwareGrowthEnabled()) {
 			return;
 		}
 
-		world.setBlockType(tilePos, Blocks.AIR);
+		Biome biome = world.getBlockBiome(tilePos);
+		WorldFeature tree = null;
 
-		if (!tree.place(
-			world,
-			random,
-			tilePos.x(),
-			tilePos.y(),
-			tilePos.z()
-		)) {
-			world.setBlockType(
-				tilePos,
-				((BlockLogicSaplingThorn)(Object)this).block
-			);
+		// 1. Caatinga Plains
+		if ("biome.overworld.caatinga.plains".equals(biome.translationKey) && BiomeTreesConfig.isCaatingaPlainsGrowthEnabled()) {
+			boolean shortThorn = BiomeTreesConfig.isCaatingaPlainsShortThornEnabled();
+			boolean shrub = BiomeTreesConfig.isCaatingaPlainsShrubEnabled();
+
+			if (!shortThorn && !shrub) return; // Fallback to vanilla
+
+			ci.cancel();
+
+			if (shortThorn && shrub) {
+				// User logic: 25% Shrub, 75% Short Thorn
+				tree = random.nextInt(4) == 0 ? new WorldFeatureTreeShrub(Blocks.LEAVES_THORN.id(), Blocks.LOG_OAK.id()) : new WorldFeatureTreeThorn(1, Blocks.LOG_THORN.id(), 0, Blocks.LEAVES_THORN.id(), 0);
+			} else if (shortThorn) {
+				tree = new WorldFeatureTreeThorn(1, Blocks.LOG_THORN.id(), 0, Blocks.LEAVES_THORN.id(), 0);
+			} else if (shrub) {
+				tree = new WorldFeatureTreeShrub(Blocks.LEAVES_THORN.id(), Blocks.LOG_OAK.id());
+			}
+		}
+		// 2. Regular Caatinga
+		else if (biome instanceof BiomeCaatinga && BiomeTreesConfig.isCaatingaGrowthEnabled()) {
+			boolean tallThorn = BiomeTreesConfig.isCaatingaTallThornEnabled();
+			boolean shrub = BiomeTreesConfig.isCaatingaShrubEnabled();
+
+			if (!tallThorn && !shrub) return; // Fallback to vanilla
+
+			ci.cancel();
+
+			if (tallThorn && shrub) {
+				// User logic: 25% Shrub, 75% Tall Thorn
+				tree = random.nextInt(4) == 0 ? new WorldFeatureTreeShrub(Blocks.LEAVES_THORN.id(), Blocks.LOG_OAK.id()) : new WorldFeatureTreeThorn(4, Blocks.LOG_THORN.id(), 0, Blocks.LEAVES_THORN.id(), 0);
+			} else if (tallThorn) {
+				tree = new WorldFeatureTreeThorn(4, Blocks.LOG_THORN.id(), 0, Blocks.LEAVES_THORN.id(), 0);
+			} else if (shrub) {
+				tree = new WorldFeatureTreeShrub(Blocks.LEAVES_THORN.id(), Blocks.LOG_OAK.id());
+			}
 		}
 
-		ci.cancel();
+		// 3. Place Tree if selected
+		if (tree != null) {
+			world.setBlockType(tilePos, Blocks.AIR);
+			if (!tree.place(world, random, tilePos.x(), tilePos.y(), tilePos.z())) {
+				world.setBlockType(tilePos, ((BlockLogicSaplingThorn)(Object)this).block);
+			}
+		}
 	}
 }
-

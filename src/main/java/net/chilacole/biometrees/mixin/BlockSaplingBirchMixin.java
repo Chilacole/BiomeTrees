@@ -8,6 +8,8 @@ import net.minecraft.core.world.World;
 import net.minecraft.core.world.biome.Biome;
 import net.minecraft.core.world.biome.overworld.BiomeBirchForest;
 import net.minecraft.core.world.generate.feature.WorldFeature;
+import net.minecraft.core.world.generate.feature.tree.WorldFeatureTree;
+import net.minecraft.core.world.generate.feature.tree.WorldFeatureTreeTall;
 import net.minecraft.core.world.pos.TilePosc;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,37 +27,45 @@ public abstract class BlockSaplingBirchMixin {
 		at = @At("HEAD"),
 		cancellable = true
 	)
-	private void onGrowTree(
-		World world,
-		TilePosc tilePos,
-		Random random,
-		CallbackInfo ci
-	) {
-		Biome biome = world.getBlockBiome(tilePos);
-
-		// Only override birch saplings in birch forests.
-		if (!(biome instanceof BiomeBirchForest)) {
+	private void onGrowTree(World world, TilePosc tilePos, Random random, CallbackInfo ci) {
+		// Master toggle check
+		if (!BiomeTreesConfig.isBiomeAwareGrowthEnabled()) {
 			return;
 		}
 
-		// Use the exact tree-generation logic of the biome.
-		WorldFeature tree = biome.getTreeFeature(random);
+		Biome biome = world.getBlockBiome(tilePos);
 
-		world.setBlockType(tilePos, Blocks.AIR);
+		// Birch Forest Logic
+		if (biome instanceof BiomeBirchForest && BiomeTreesConfig.isBirchForestGrowthEnabled()) {
+			boolean tall = BiomeTreesConfig.isBirchForestTallEnabled();
+			boolean regular = BiomeTreesConfig.isBirchForestRegularEnabled();
 
-		if (!tree.place(
-			world,
-			random,
-			tilePos.x(),
-			tilePos.y(),
-			tilePos.z()
-		)) {
-			world.setBlockType(
-				tilePos,
-				((BlockLogicSaplingBirch)(Object)this).block
-			);
+			// If both variants are disabled, run the vanilla sapling logic
+			if (!tall && !regular) {
+				return;
+			}
+
+			ci.cancel();
+			WorldFeature tree = null;
+
+			if (tall && regular) {
+				// Both enabled: 10% Tall, 90% Regular (height 8)
+				tree = random.nextInt(10) == 0 ? new WorldFeatureTreeTall(Blocks.LEAVES_BIRCH.id(), Blocks.LOG_BIRCH.id()) : new WorldFeatureTree(Blocks.LEAVES_BIRCH.id(), Blocks.LOG_BIRCH.id(), 8);
+			} else if (tall) {
+				// Only tall enabled: 100% Tall
+				tree = new WorldFeatureTreeTall(Blocks.LEAVES_BIRCH.id(), Blocks.LOG_BIRCH.id());
+			} else if (regular) {
+				// Only regular enabled: 100% Regular (height 8)
+				tree = new WorldFeatureTree(Blocks.LEAVES_BIRCH.id(), Blocks.LOG_BIRCH.id(), 8);
+			}
+
+			// Place the selected tree
+			if (tree != null) {
+				world.setBlockType(tilePos, Blocks.AIR);
+				if (!tree.place(world, random, tilePos.x(), tilePos.y(), tilePos.z())) {
+					world.setBlockType(tilePos, ((BlockLogicSaplingBirch)(Object)this).block);
+				}
+			}
 		}
-
-		ci.cancel();
 	}
 }
