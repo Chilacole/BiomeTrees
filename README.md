@@ -4,7 +4,7 @@
 
 # Native Roots - Biome-Aware Saplings
 
-A mod for Better Than Adventure! (BTA). Ever wanted trees to adapt to their environment when planted, without adding dozens of custom sapling items? Native Roots makes it happen!
+A mod for Better Than Adventure! (BTA) that makes trees adapt to the biomes where they're planted. Previously, saplings would grow into their usual tree types regardless of their surroundings. Native Roots changes that by allowing existing saplings to grow into biome-specific tree variants, bringing greater variety and a more natural feel to reforestation.
 
 ## Features
 
@@ -18,7 +18,7 @@ A mod for Better Than Adventure! (BTA). Ever wanted trees to adapt to their envi
 
 ## Requires
 
-- [Halplibe](https://modrinth.com/mod/halplibe) *(or Mod Menu for the in-game config screen)*
+- [Halplibe](https://modrinth.com/mod/halplibe) *(and optionally Mod Menu for the in-game config screen)*
 
 ## Credits
 
