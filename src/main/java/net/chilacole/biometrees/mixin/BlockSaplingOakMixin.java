@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.chilacole.biometrees.BiomeTreesConfig;
+import net.chilacole.biometrees.BiomeTreesUtils;
 
 @Mixin(value = BlockLogicSaplingOak.class, remap = false)
 public abstract class BlockSaplingOakMixin {
@@ -39,13 +40,9 @@ public abstract class BlockSaplingOakMixin {
 		if (biome instanceof BiomeSwamp && BiomeTreesConfig.isSwampOakGrowthEnabled()) {
 			WorldFeature tree = biome.getTreeFeature(random);
 
-			world.setBlockType(tilePos, Blocks.AIR);
-
-			if (!tree.place(world, random, tilePos.x(), tilePos.y(), tilePos.z())) {
-				world.setBlockType(tilePos, ((BlockLogicSaplingOak)(Object)this).block);
-			}
-
 			ci.cancel();
+			// Use utility for swamp tree
+			BiomeTreesUtils.placeTree(world, tilePos, random, tree, ((BlockLogicSaplingOak)(Object)this).block);
 			return;
 		}
 
@@ -68,7 +65,7 @@ public abstract class BlockSaplingOakMixin {
 
 			// 1. Attempt Giant Oak
 			if (giant) {
-				// If it's the ONLY tree enabled, 1-in-192 chance (~3 stacks avg).
+				// If it's the ONLY tree enabled, 1-in-250 chance (~4 stacks avg).
 				// Otherwise, normal 1-in-1000 chance.
 				int chance = onlyGiant ? 250 : 1000;
 				if (random.nextInt(chance) == 0) {
@@ -102,13 +99,8 @@ public abstract class BlockSaplingOakMixin {
 				}
 			}
 
-			// 4. Place the selected tree
-			if (tree != null) {
-				world.setBlockType(tilePos, Blocks.AIR);
-				if (!tree.place(world, random, tilePos.x(), tilePos.y(), tilePos.z())) {
-					world.setBlockType(tilePos, ((BlockLogicSaplingOak)(Object)this).block);
-				}
-			}
+			// 4. Place Tree using our new utility
+			BiomeTreesUtils.placeTree(world, tilePos, random, tree, ((BlockLogicSaplingOak)(Object)this).block);
 		}
 	}
 }

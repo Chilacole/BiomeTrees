@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.chilacole.biometrees.BiomeTreesConfig;
+import net.chilacole.biometrees.BiomeTreesUtils;
 
 @Mixin(value = BlockLogicSaplingBirch.class, remap = false)
 public abstract class BlockSaplingBirchMixin {
@@ -59,13 +60,8 @@ public abstract class BlockSaplingBirchMixin {
 				tree = new WorldFeatureTree(Blocks.LEAVES_BIRCH.id(), Blocks.LOG_BIRCH.id(), 8);
 			}
 
-			// Place the selected tree
-			if (tree != null) {
-				world.setBlockType(tilePos, Blocks.AIR);
-				if (!tree.place(world, random, tilePos.x(), tilePos.y(), tilePos.z())) {
-					world.setBlockType(tilePos, ((BlockLogicSaplingBirch)(Object)this).block);
-				}
-			}
+			// Place the selected tree using our utility
+			BiomeTreesUtils.placeTree(world, tilePos, random, tree, ((BlockLogicSaplingBirch)(Object)this).block);
 		}
 	}
 }

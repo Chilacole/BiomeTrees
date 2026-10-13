@@ -18,9 +18,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.chilacole.biometrees.BiomeTreesConfig;
+import net.chilacole.biometrees.BiomeTreesUtils;
 
 @Mixin(value = BlockLogicSaplingThorn.class, remap = false)
 public abstract class BlockSaplingThornMixin {
+
+	// Extracted String Literal
+	private static final String CAATINGA_PLAINS_KEY = "biome.overworld.caatinga.plains";
 
 	@Inject(
 		method = "growTree",
@@ -36,7 +40,7 @@ public abstract class BlockSaplingThornMixin {
 		WorldFeature tree = null;
 
 		// 1. Caatinga Plains
-		if ("biome.overworld.caatinga.plains".equals(biome.translationKey) && BiomeTreesConfig.isCaatingaPlainsGrowthEnabled()) {
+		if (CAATINGA_PLAINS_KEY.equals(biome.translationKey) && BiomeTreesConfig.isCaatingaPlainsGrowthEnabled()) {
 			boolean shortThorn = BiomeTreesConfig.isCaatingaPlainsShortThornEnabled();
 			boolean shrub = BiomeTreesConfig.isCaatingaPlainsShrubEnabled();
 
@@ -72,12 +76,7 @@ public abstract class BlockSaplingThornMixin {
 			}
 		}
 
-		// 3. Place Tree if selected
-		if (tree != null) {
-			world.setBlockType(tilePos, Blocks.AIR);
-			if (!tree.place(world, random, tilePos.x(), tilePos.y(), tilePos.z())) {
-				world.setBlockType(tilePos, ((BlockLogicSaplingThorn)(Object)this).block);
-			}
-		}
+		// 3. Place Tree using our new utility
+		BiomeTreesUtils.placeTree(world, tilePos, random, tree, ((BlockLogicSaplingThorn)(Object)this).block);
 	}
 }
